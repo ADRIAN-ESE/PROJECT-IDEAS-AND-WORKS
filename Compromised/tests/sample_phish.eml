@@ -1,0 +1,35 @@
+From: "PayPal Security" <alerts@secure-verify-paypal.xyz>
+To: victim@example.com
+Reply-To: recovery@attacker-mail.ru
+Return-Path: <bounce@secure-verify-paypal.xyz>
+Subject: URGENT: unusual activity detected on your account
+Date: Mon, 05 Oct 2026 03:12:00 +0000
+Message-ID: <202610050312@secure-verify-paypal.xyz>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----=_Part_4711"
+
+------=_Part_4711
+Content-Type: text/plain; charset="utf-8"
+
+Dear Customer,
+
+We detected unusual activity on your account. Your account will be
+suspended within 24 hours unless you verify your identity immediately.
+
+Click here to verify your account:
+http://203.0.113.44/paypal-secure/login.php?ref=aG9zdD1waGFscGUubmV0
+
+Failure to respond will result in permanent restriction. Please confirm
+your password and provide your credit card number to restore access.
+
+Thank you,
+PayPal Customer Care
+
+------=_Part_4711
+Content-Type: application/octet-stream; name="invoice_2026.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="invoice_2026.zip"
+
+UEsDBBAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAbWZvcm5pYy5leGU=
+
+------=_Part_4711--

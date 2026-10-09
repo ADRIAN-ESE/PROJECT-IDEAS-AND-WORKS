@@ -1,0 +1,15 @@
+{% extends "_auth_shell.html" %}{% block title %}Create account{% endblock %}
+{% block card %}
+<h2>Create your account</h2>
+{% for e in errors %}<p class="flash flash-error">{{ e }}</p>{% endfor %}
+<form method="post">{{ m.csrf() }}
+  <label class="field"><span>Username</span><input name="username" value="{{ form.get('username','') }}" autocomplete="username" required pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{2,31}"><small>3–32 letters, numbers, dot, dash or underscore. Others use this to share files with you.</small></label>
+  <label class="field"><span>Display name <em>(optional)</em></span><input name="display_name" value="{{ form.get('display_name','') }}" maxlength="60"></label>
+  <label class="field"><span>Email</span><input name="email" type="email" value="{{ form.get('email','') }}" autocomplete="email" required></label>
+  <label class="field"><span>Password</span><input name="password" type="password" autocomplete="new-password" minlength="12" required data-strength="#meter"><small>At least 12 characters. A few random words works well.</small></label>
+  <div id="meter" class="meter" aria-live="polite"><i></i><span></span></div>
+  <label class="field"><span>Confirm password</span><input name="password2" type="password" autocomplete="new-password" required></label>
+  <button class="btn btn-primary wide" type="submit">Create account</button>
+</form>
+<p class="aside">Already registered? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+{% endblock %}

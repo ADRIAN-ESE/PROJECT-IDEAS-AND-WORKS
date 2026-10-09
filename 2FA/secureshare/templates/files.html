@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}My files{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>My files</h1></header>
+<section id="dropzone" class="drop" tabindex="0" data-max="{{ max_mb * 1048576 }}" data-url="{{ url_for('files.upload') }}">
+  <p><strong>Drop a file here</strong> or <label class="linklike">browse<input id="picker" type="file" hidden></label></p>
+  <small>Up to {{ max_mb }} MB. Allowed: {{ types }}. Every upload is type-checked, virus-scanned and encrypted.</small>
+  <ul id="uploads" class="uploads" aria-live="polite"></ul>
+</section>
+<form class="search" method="get"><input type="search" name="q" value="{{ q }}" placeholder="Search by file name" aria-label="Search files"><button class="btn" type="submit">Search</button></form>
+{% if files %}
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>Size</th><th>Uploaded</th><th>Scan</th><th>Shares</th></tr></thead>
+<tbody>{% for f in files %}<tr>
+<td><a href="{{ url_for('files.detail', fid=f.id) }}">{{ f.safe_name }}</a></td><td>{{ f.size|size }}</td><td>{{ m.when(f.created_at) }}</td>
+<td><span class="chip chip-ok">Clean</span></td><td>{{ f.shares or '—' }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p class="empty">{{ 'No files match that search.' if q else 'No files yet. Drop one above to get started.' }}</p>{% endif %}
+</div>
+{% endblock %}

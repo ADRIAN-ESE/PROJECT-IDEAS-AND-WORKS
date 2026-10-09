@@ -1,0 +1,106 @@
+[
+  {
+    "indicator": "coinhive.com",
+    "type": "domain",
+    "category": "cryptomining",
+    "confidence": "high",
+    "source": "bundled feed — publicly documented cryptojacking service (discontinued)",
+    "note": "In-browser Monero miner abused across thousands of compromised sites."
+  },
+  {
+    "indicator": "crypto-loot.com",
+    "type": "domain",
+    "category": "cryptomining",
+    "confidence": "high",
+    "source": "bundled feed — publicly documented cryptojacking service",
+    "note": "Browser-based coin mining service widely abused without site-owner consent."
+  },
+  {
+    "indicator": "coinimp.com",
+    "type": "domain",
+    "category": "cryptomining",
+    "confidence": "medium",
+    "source": "bundled feed — publicly documented miner script",
+    "note": "Cryptonight miner distribution domain."
+  },
+  {
+    "indicator": "anonfiles.com",
+    "type": "domain",
+    "category": "malware-hosting",
+    "confidence": "medium",
+    "source": "bundled feed — file-host abused for malware distribution (shut down 2023)",
+    "note": "Anonymous file host frequently referenced in malware delivery chains."
+  },
+  {
+    "indicator": "duckdns.org",
+    "type": "domain",
+    "category": "dynamic-dns",
+    "confidence": "low",
+    "source": "bundled feed — legitimate dynamic DNS, heavily abused",
+    "note": "Free dynamic DNS: attackers rotate hostnames here to evade blocklists."
+  },
+  {
+    "indicator": "no-ip.com",
+    "type": "domain",
+    "category": "dynamic-dns",
+    "confidence": "low",
+    "source": "bundled feed — legitimate dynamic DNS, heavily abused",
+    "note": "Frequently used by botnet C2 and phishing kits for cheap hostnames."
+  },
+  {
+    "indicator": "hopto.org",
+    "type": "domain",
+    "category": "dynamic-dns",
+    "confidence": "low",
+    "source": "bundled feed — legitimate dynamic DNS, heavily abused",
+    "note": "No-IP free hostname range commonly seen in spam and malware campaigns."
+  },
+  {
+    "indicator": "dyndns.org",
+    "type": "domain",
+    "category": "dynamic-dns",
+    "confidence": "low",
+    "source": "bundled feed — legitimate dynamic DNS, heavily abused",
+    "note": "Dynamic DNS frequently abused for short-lived C2 infrastructure."
+  },
+  {
+    "indicator": "185.220.101.0/24",
+    "type": "ip",
+    "category": "tor-exit",
+    "confidence": "low",
+    "source": "bundled feed — publicly published Tor exit range (example)",
+    "note": "Traffic from Tor exit space; anonymous by design, not proof of abuse."
+  },
+  {
+    "indicator": "192.0.2.0/24",
+    "type": "ip",
+    "category": "documentation",
+    "confidence": "high",
+    "source": "bundled feed — TEST-NET-1 (RFC 5737)",
+    "note": "Range reserved for documentation; anything claiming to originate here is fabricated."
+  },
+  {
+    "indicator": "198.51.100.0/24",
+    "type": "ip",
+    "category": "documentation",
+    "confidence": "high",
+    "source": "bundled feed — TEST-NET-2 (RFC 5737)",
+    "note": "Range reserved for documentation; anything claiming to originate here is fabricated."
+  },
+  {
+    "indicator": "203.0.113.0/24",
+    "type": "ip",
+    "category": "documentation",
+    "confidence": "high",
+    "source": "bundled feed — TEST-NET-3 (RFC 5737)",
+    "note": "Range reserved for documentation; anything claiming to originate here is fabricated."
+  },
+  {
+    "indicator": "phishing.example",
+    "type": "domain",
+    "category": "phishing",
+    "confidence": "high",
+    "source": "bundled feed — sample entry",
+    "note": "Sample indicator demonstrating the feed format; replace with your own feed."
+  }
+]

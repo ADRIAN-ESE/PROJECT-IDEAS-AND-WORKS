@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Set up 2FA{% endblock %}
+{% block content %}
+<div class="page narrow">
+<header class="page-head"><h1>Set up two-factor authentication</h1></header>
+<ol class="steps">
+<li><strong>Install an authenticator app</strong> such as Aegis, 2FAS, Google Authenticator, Microsoft Authenticator or 1Password.</li>
+<li><strong>Scan this QR code</strong> with the app.
+  <div class="qr"><img src="{{ qr_uri }}" alt="QR code for your authenticator app" width="240" height="240"></div>
+  <details><summary>Can't scan? Enter the key by hand</summary><p><code class="secret">{{ secret }}</code></p><p class="note">Time-based, 6 digits, 30 seconds, SHA-1.</p></details></li>
+<li><strong>Enter the 6-digit code</strong> the app shows to confirm.
+  <form method="post" class="inline-form">{{ m.csrf() }}
+    <input class="code-input" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" pattern="[0-9 ]{6,7}" required aria-label="6-digit code">
+    <button class="btn btn-primary">Turn on 2FA</button></form></li>
+</ol>
+<p class="note">Next you'll get one-time backup codes in case you lose your phone.</p>
+</div>
+{% endblock %}

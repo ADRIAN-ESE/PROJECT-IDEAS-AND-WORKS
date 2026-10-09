@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Shared files{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>Shared files</h1></header>
+<section><h2>Shared with me</h2>
+{% if with_me %}<div class="table-wrap"><table><thead><tr><th>File</th><th>From</th><th>Access</th><th>Expires</th><th>Status</th></tr></thead><tbody>
+{% for s in with_me %}<tr><td>{% if not s.revoked and not (s.expires_at and s.expires_at <= t) %}<a href="{{ url_for('files.detail', fid=s.file_id) }}">{{ s.safe_name }}</a>{% else %}{{ s.safe_name }}{% endif %}</td>
+<td>{{ s.sharer }}</td><td>{{ s.permission|capitalize }}{{ ' · download' if s.allow_download }}{{ ' · reshare' if s.allow_reshare }}</td>
+<td>{{ m.when(s.expires_at) if s.expires_at else 'Never' }}</td><td>{{ m.share_state(s, t) }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p class="empty">Nobody has shared a file with you yet.</p>{% endif %}</section>
+<section><h2>Shared by me</h2>
+{% if by_me %}<div class="table-wrap"><table><thead><tr><th>File</th><th>With</th><th>Access</th><th>Downloads</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>
+{% for s in by_me %}<tr><td><a href="{{ url_for('files.detail', fid=s.file_id) }}">{{ s.safe_name }}</a></td><td>{{ s.recipient or 'Link' }}</td>
+<td>{{ s.permission|capitalize }}{{ ' · download' if s.allow_download }}{{ ' · reshare' if s.allow_reshare }}</td>
+<td>{{ s.download_count }}{{ ' / ' ~ s.max_downloads if s.max_downloads is not none }}</td>
+<td>{{ m.when(s.expires_at) if s.expires_at else 'Never' }}</td><td>{{ m.share_state(s, t) }}</td>
+<td>{% if not s.revoked %}<form method="post" action="{{ url_for('files.revoke_share', sid=s.id) }}" data-confirm="Revoke this share? The recipient loses access immediately.">{{ m.csrf() }}<button class="btn btn-small btn-danger">Revoke</button></form>{% endif %}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p class="empty">You haven't shared anything. Open a file and use “Share” to start.</p>{% endif %}</section>
+</div>
+{% endblock %}

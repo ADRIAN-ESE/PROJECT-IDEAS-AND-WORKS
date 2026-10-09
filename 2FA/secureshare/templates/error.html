@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block title %}Error {{ code }}{% endblock %}
+{% block content %}
+<div class="page narrow"><h1>{{ code }}</h1><p class="lead">{{ message }}</p>
+<p><a class="btn" href="{{ url_for('files.dashboard') if current_user else url_for('auth.login') }}">Go back</a></p></div>
+{% endblock %}

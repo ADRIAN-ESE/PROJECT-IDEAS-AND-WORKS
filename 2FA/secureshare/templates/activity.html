@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Activity log{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>Activity log</h1><p class="lead">Everything done with your account. If something here isn't you, change your password.</p></header>
+{% if alerts %}<section><h2>Security alerts</h2>{% for a in alerts %}<div class="callout {{ 'bad' if a.severity=='critical' else 'warn' }}"><div><strong>{{ a.kind|replace('_',' ')|capitalize }}.</strong> {{ a.detail }} <small>{{ m.when(a.ts) }}</small></div></div>{% endfor %}</section>{% endif %}
+<div class="table-wrap"><table><thead><tr><th>When</th><th>Event</th><th>Details</th><th>Address</th><th></th></tr></thead><tbody>
+{% for a in rows %}<tr><td>{{ m.when(a.ts) }}</td><td>{{ a.action|replace('_',' ') }}</td><td>{{ a.detail }}</td><td><code>{{ a.ip }}</code></td><td>{{ m.sev(a.severity) }}</td></tr>{% endfor %}</tbody></table></div>
+<p class="pager">{% if page > 1 %}<a href="?page={{ page-1 }}">← Newer</a>{% endif %} {% if more %}<a href="?page={{ page+1 }}">Older →</a>{% endif %}</p>
+</div>
+{% endblock %}

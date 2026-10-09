@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Admin{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>Administration</h1><p class="lead">{{ users|length }} accounts · {{ totals.n }} files ({{ totals.bytes|size }}) · {{ fails }} failed sign-in or 2FA attempts in the last 24 hours</p>
+<p><a class="btn" href="{{ url_for('admin.audit_log') }}">Audit log</a></p></header>
+<section><h2>Open alerts</h2>
+{% if alerts %}{% for a in alerts %}<div class="callout {{ 'bad' if a.severity=='critical' else 'warn' }}"><div><strong>{{ a.kind|replace('_',' ')|capitalize }}</strong> — {{ a.detail }}<br><small>{{ m.when(a.ts) }} · {{ a.username or 'no account' }} · <code>{{ a.ip }}</code></small></div>
+<form method="post" action="{{ url_for('admin.resolve_alert', aid=a.id) }}">{{ m.csrf() }}<button class="btn btn-small">Resolve</button></form></div>{% endfor %}
+{% else %}<p class="empty">No open alerts.</p>{% endif %}</section>
+<section><h2>Accounts</h2><div class="table-wrap"><table><thead><tr><th>User</th><th>Role</th><th>2FA</th><th>Files</th><th>Last sign-in</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for u in users %}<tr><td>{{ u.username }}<br><small>{{ u.email }}</small></td><td>{{ u.role }}</td><td>{{ 'On' if u.totp_enabled else 'Off' }}</td><td>{{ u.nfiles }} · {{ u.bytes|size }}</td><td>{{ m.when(u.last_login_at) }}</td>
+<td>{% if not u.is_active %}<span class="chip chip-off">Disabled</span>{% elif u.locked_until > now %}<span class="chip chip-warning">Locked</span>{% else %}<span class="chip chip-ok">Active</span>{% endif %}{% if u.failed_count %} <small>{{ u.failed_count }} failures</small>{% endif %}</td>
+<td class="acts">{% for act, label in (('unlock','Unlock'),('revoke-sessions','End sessions'),('reset-2fa','Reset 2FA'),('disable' if u.is_active else 'enable', 'Disable' if u.is_active else 'Enable')) %}
+<form method="post" action="{{ url_for('admin.user_action', uid=u.id, action=act) }}" data-confirm="{{ label }} {{ u.username }}?">{{ m.csrf() }}<button class="btn btn-small {{ 'btn-danger' if act in ('disable','reset-2fa') }}">{{ label }}</button></form>{% endfor %}</td></tr>{% endfor %}</tbody></table></div>
+<p class="note">Administrators can see file metadata but not file contents in this interface. Create administrators with <code>flask --app app create-admin</code>.</p></section>
+</div>
+{% endblock %}

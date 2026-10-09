@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PhishGuard — professional phishing, compromised account and threat-intel detection." />
+  <title>PhishGuard · Threat Analysis Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+</head>
+<body>
+  <!-- ============================== HEADER ============================== -->
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="logo" href="#" aria-label="PhishGuard home">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <span class="logo-text">
+          <strong>PhishGuard</strong>
+          <small>Threat Analysis Suite</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" role="tablist" aria-label="Modules">
+        <button class="nav-btn active" role="tab" aria-selected="true" data-tab="analyzer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>Analyze</span>
+        </button>
+        <button class="nav-btn" role="tab" aria-selected="false" data-tab="exposure">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Exposure</span>
+        </button>
+        <button class="nav-btn" role="tab" aria-selected="false" data-tab="activity">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Activity</span>
+        </button>
+        <button class="nav-btn" role="tab" aria-selected="false" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <span class="engine-badge" title="Detection engine status">
+          <span class="pulse"></span> Engine v2
+        </span>
+        <button class="icon-btn" id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- ============================ ANALYZER ============================ -->
+    <section id="analyzer" class="view active" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Email Threat Analysis</h1>
+          <p class="subtitle">Six-stage pipeline: sender &amp; domain, URLs, content, attachments, header forensics and threat intelligence.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn secondary" id="sample-btn" type="button">Load sample</button>
+          <button class="btn secondary" id="sample-legit-btn" type="button">Load legitimate email</button>
+          <button class="btn ghost" id="clear-btn" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <!-- ---------------------- input form ---------------------- -->
+        <form id="analyze-form" class="panel-card" novalidate>
+          <div class="panel-head">
+            <h2>Message under investigation</h2>
+            <span class="panel-hint">Paste or upload</span>
+          </div>
+
+          <div class="dropzone" id="dropzone" tabindex="0" role="button"
+               aria-label="Upload an email file">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+            <div>
+              <strong>Drop an .eml file</strong>
+              <span>or click to browse — headers, body and attachments are parsed automatically</span>
+            </div>
+            <input type="file" id="file-input" accept=".eml,.msg,.txt,message/rfc822,text/plain" hidden />
+          </div>
+          <div class="upload-status" id="upload-status" hidden></div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="sender">Sender <span class="req">From address</span></label>
+              <input id="sender" type="text" autocomplete="off" spellcheck="false"
+                     placeholder='Display Name &lt;user@domain.tld&gt;' />
+            </div>
+            <div class="field">
+              <label for="attachments">Attachments</label>
+              <input id="attachments" type="text" autocomplete="off"
+                     placeholder="invoice.zip, update.exe" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="subject">Subject line</label>
+            <input id="subject" type="text" autocomplete="off"
+                   placeholder="URGENT: your account will be suspended in 24 hours" />
+          </div>
+
+          <div class="field">
+            <label for="body">Message body</label>
+            <textarea id="body" rows="8" spellcheck="false"
+                      placeholder="Paste the email body — plain text or HTML both work…"></textarea>
+            <small class="help"><span id="char-count">0</span> characters</small>
+          </div>
+
+          <details class="advanced">
+            <summary>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+              Advanced — raw headers
+            </summary>
+            <div class="field">
+              <label for="headers">Raw email headers</label>
+              <textarea id="headers" rows="5" spellcheck="false"
+                        placeholder="Authentication-Results: mx.example.com; spf=fail dkim=fail dmarc=fail"></textarea>
+              <small class="help">From / Reply-To / Return-Path / Received / DKIM are analysed.</small>
+            </div>
+          </details>
+
+          <div class="form-footer">
+            <button type="submit" class="btn primary" id="analyze-btn">
+              <span class="btn-label">Run analysis</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+            <p class="form-error" id="analyze-error" role="alert" hidden></p>
+          </div>
+        </form>
+
+        <!-- ---------------------- results ---------------------- -->
+        <div class="panel-card results-panel" id="results-card">
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/>
+              </svg>
+            </div>
+            <h2>Awaiting analysis</h2>
+            <p>Paste a message or drop an .eml file to receive a weighted 0–100 risk
+               score, extracted IOCs and a line-by-line explanation of every signal.</p>
+            <div class="scale-legend">
+              <span><i class="dot ok"></i> 0–24 Clean</span>
+              <span><i class="dot low"></i> 25–49 Low risk</span>
+              <span><i class="dot warn"></i> 50–74 Suspicious</span>
+              <span><i class="dot crit"></i> 75–100 Phishing</span>
+            </div>
+          </div>
+
+          <div class="report" id="report" hidden>
+            <div class="report-head">
+              <div class="score-ring">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                  <circle class="ring-fg" id="ring" cx="60" cy="60" r="52"/>
+                </svg>
+                <div class="ring-text">
+                  <strong id="gauge-value">0</strong>
+                  <small>/ 100</small>
+                </div>
+              </div>
+
+              <div class="verdict-block">
+                <div class="verdict-top">
+                  <span class="verdict-badge" id="verdict">—</span>
+                  <span class="scan-meta">
+                    <span id="scan-id">—</span> · <span id="scan-time">—</span>
+                  </span>
+                </div>
+                <p class="verdict-note" id="verdict-note"></p>
+                <div class="cat-grid" id="cat-grid"></div>
+              </div>
+            </div>
+
+            <div class="report-section" id="urls-section" hidden>
+              <div class="section-title">
+                <h3>Extracted links</h3><span class="count-pill" id="url-count">0</span>
+              </div>
+              <ul class="url-list" id="url-list"></ul>
+            </div>
+
+            <div class="report-section" id="ioc-section" hidden>
+              <div class="section-title">
+                <h3>Indicators of compromise</h3><span class="count-pill" id="ioc-count">0</span>
+              </div>
+              <div class="ioc-grid" id="ioc-grid"></div>
+              <div class="inline-actions">
+                <button class="btn secondary small" id="copy-iocs-btn" type="button">Copy IOCs</button>
+              </div>
+            </div>
+
+            <div class="report-section" id="ti-section" hidden>
+              <div class="section-title"><h3>Threat intelligence</h3></div>
+              <div id="ti-summary"></div>
+            </div>
+
+            <div class="report-section">
+              <div class="section-title">
+                <h3>Findings</h3><span class="count-pill" id="finding-count">0</span>
+              </div>
+              <div id="finding-groups"></div>
+            </div>
+
+            <div class="report-section">
+              <div class="section-title"><h3>Recommended actions</h3></div>
+              <ul class="advice-list" id="advice-list"></ul>
+            </div>
+
+            <div class="report-section feedback-section">
+              <div class="section-title"><h3>Analyst feedback</h3></div>
+              <div class="feedback-row">
+                <button class="btn secondary small" id="fb-tp" type="button">✓ True positive</button>
+                <button class="btn secondary small" id="fb-fp" type="button">✕ False positive</button>
+                <span class="feedback-status" id="fb-status"></span>
+              </div>
+            </div>
+
+            <div class="report-actions">
+              <button class="btn secondary" id="copy-btn" type="button">Copy report</button>
+              <button class="btn secondary" id="download-btn" type="button">Download JSON</button>
+              <button class="btn ghost" id="print-btn" type="button">Print</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ EXPOSURE ============================ -->
+    <section id="exposure" class="view" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Account Exposure</h1>
+          <p class="subtitle">Breach lookups, password exposure and compromised-account assessment.</p>
+        </div>
+      </div>
+
+      <div class="workspace two">
+        <form id="password-form" class="panel-card" novalidate>
+          <div class="panel-head">
+            <h2>Password exposure</h2>
+            <span class="tag-ok">k-anonymity</span>
+          </div>
+          <p class="prose">Only the first 5 characters of the password's SHA-1 hash are
+             transmitted. The password itself never leaves this machine.</p>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" autocomplete="off" placeholder="Enter a password to check" />
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn primary" id="password-btn">
+              <span class="btn-label">Check password</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="form-error" id="password-error" role="alert" hidden></p>
+          <div class="notice" id="password-result" hidden></div>
+        </form>
+
+        <form id="breach-form" class="panel-card" novalidate>
+          <div class="panel-head">
+            <h2>Email breach lookup</h2>
+            <span class="tag-muted">API key required</span>
+          </div>
+          <p class="prose">Lists data breaches tied to an address via
+             <a href="https://haveibeenpwned.com/API/Key" target="_blank" rel="noopener">Have I Been Pwned</a>.</p>
+          <div class="field">
+            <label for="email">Email address</label>
+            <input id="email" type="email" autocomplete="off" placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="api-key">HIBP API key</label>
+            <input id="api-key" type="password" autocomplete="off" placeholder="••••••••••••" />
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn primary" id="breach-btn">
+              <span class="btn-label">Check breaches</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="form-error" id="breach-error" role="alert" hidden></p>
+          <div class="notice" id="breach-result" hidden></div>
+        </form>
+
+        <form id="takeover-form" class="panel-card" novalidate>
+          <div class="panel-head">
+            <h2>Compromised account assessment</h2>
+            <span class="tag-muted">BEC / takeover</span>
+          </div>
+          <p class="prose">Tick every observed indicator. The engine weights them into a
+             0–100 takeover-likelihood score and files an alert when warranted.</p>
+          <div class="checklist" id="takeover-list"><p class="help">Loading indicator catalogue…</p></div>
+          <div class="form-footer">
+            <button type="submit" class="btn primary" id="takeover-btn">
+              <span class="btn-label">Assess takeover risk</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+          <p class="form-error" id="takeover-error" role="alert" hidden></p>
+          <div class="assessment" id="takeover-result" hidden></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============================ ACTIVITY ============================= -->
+    <section id="activity" class="view" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Login &amp; Email Activity Monitor</h1>
+          <p class="subtitle">Detects unusual login behaviour and anomalous sending patterns from raw event streams.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn secondary" id="activity-sample" type="button">Load sample events</button>
+          <button class="btn ghost" id="activity-clear" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <form id="activity-form" class="panel-card" novalidate>
+          <div class="panel-head">
+            <h2>Event streams</h2>
+            <span class="panel-hint">JSON arrays</span>
+          </div>
+
+          <div class="field">
+            <label for="logins">Login events <span class="req">[{ts, user, ip, geo, device, success}]</span></label>
+            <textarea id="logins" rows="7" spellcheck="false"
+                      placeholder='[{"ts":"2026-10-07T02:10:00","user":"a@corp.com","ip":"203.0.113.9","geo":"NG","device":"Chrome","success":true}]'></textarea>
+          </div>
+
+          <div class="field">
+            <label for="sendemails">Sent-email events <span class="req">[{ts, from, recipients, subject}]</span></label>
+            <textarea id="sendemails" rows="7" spellcheck="false"
+                      placeholder='[{"ts":"2026-10-07T03:00:00","from":"a@corp.com","recipients":["x@ext.com"],"subject":"hello"}]'></textarea>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn primary" id="activity-btn">
+              <span class="btn-label">Analyse activity</span>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
+            <p class="form-error" id="activity-error" role="alert" hidden></p>
+          </div>
+        </form>
+
+        <div class="panel-card results-panel">
+          <div class="empty-state" id="activity-empty">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <h2>No activity analysed</h2>
+            <p>Paste login and sent-mail events (or load the sample) to detect off-hours
+               access, failed-login bursts, impossible travel, send-volume spikes and
+               recipient fan-out.</p>
+          </div>
+          <div class="assessment" id="activity-result" hidden></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================== DASHBOARD ============================ -->
+    <section id="dashboard" class="view" role="tabpanel">
+      <div class="page-head">
+        <div>
+          <h1>Investigation Dashboard</h1>
+          <p class="subtitle">Alerts, incident history, analyst feedback and indicator intelligence — stored server-side.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn secondary" id="refresh-dash" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div class="kpi-row" id="kpi-row">
+        <div class="kpi"><span class="kpi-label">Incidents</span><strong id="kpi-incidents">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Open alerts</span><strong id="kpi-alerts">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Avg score</span><strong id="kpi-avg">—</strong></div>
+        <div class="kpi"><span class="kpi-label">Detection accuracy</span><strong id="kpi-accuracy">—</strong></div>
+        <div class="kpi"><span class="kpi-label">TI feed size</span><strong id="kpi-feed">—</strong></div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Alerts</h2>
+            <span class="panel-hint" id="alert-count"></span>
+          </div>
+          <div id="alert-list" class="alert-list"><p class="help">Loading…</p></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-head"><h2>Verdict distribution</h2></div>
+          <div id="verdict-chart" class="verdict-chart"></div>
+          <div class="panel-head" style="margin-top:1.2rem"><h2>Detection feedback</h2></div>
+          <div id="feedback-summary" class="feedback-summary"></div>
+        </div>
+      </div>
+
+      <div class="panel-card history-panel">
+        <div class="panel-head">
+          <h2>Incident history</h2>
+          <span class="panel-hint" id="incident-count"></span>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Incident</th><th>Type</th><th>Score</th><th>Verdict</th>
+                <th>Time</th><th>Feedback</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="incident-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Extracted indicators</h2>
+            <span class="panel-hint" id="ioc-total"></span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Indicator</th><th>Type</th><th>Hits</th><th>TI</th></tr></thead>
+              <tbody id="dash-ioc-body"><tr><td colspan="4" class="help">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-head">
+            <h2>Threat intel workbench</h2>
+            <span class="panel-hint" id="feed-info"></span>
+          </div>
+
+          <div class="field">
+            <label for="ti-input">Check indicators <span class="req">one per line</span></label>
+            <textarea id="ti-input" rows="4" spellcheck="false" placeholder="evil.com&#10;203.0.113.44&#10;http://phish.example/login"></textarea>
+          </div>
+          <div class="inline-actions">
+            <button class="btn secondary small" id="ti-check-btn" type="button">Check feed</button>
+            <button class="btn secondary small" id="ti-add-btn" type="button">Add to watchlist</button>
+          </div>
+          <div class="notice info" id="ti-result" hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span id="footer-version">PhishGuard</span>
+    <span class="sep">·</span>
+    <span>Scores are advisory — when in doubt, navigate to the site yourself instead of clicking.</span>
+  </footer>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block title %}Security{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>Security</h1><p class="lead">Two-factor authentication, password, and the places you're signed in.</p></header>
+
+<section id="twofa"><h2>Two-factor authentication</h2>
+{% if current_user.totp_enabled %}
+  <p><span class="chip chip-ok">On</span> You'll be asked for a 6-digit code from your authenticator app on new devices. Backup codes left: <strong>{{ codes_left }}</strong>.</p>
+  <div class="cols">
+  <form method="post" action="{{ url_for('auth.regenerate_backup') }}" class="stack card-form">{{ m.csrf() }}<h3>New backup codes</h3>
+    <label class="field"><span>Password</span><input type="password" name="password" autocomplete="current-password" required></label>
+    {{ m.code_field("Current code") }}<button class="btn">Generate new codes</button><small>Replaces all existing backup codes.</small></form>
+  {% if current_user.role != 'admin' %}
+  <form method="post" action="{{ url_for('auth.disable_2fa') }}" class="stack card-form" data-confirm="Turn off two-factor authentication?">{{ m.csrf() }}<h3>Turn off 2FA</h3>
+    <label class="field"><span>Password</span><input type="password" name="password" autocomplete="current-password" required></label>
+    {{ m.code_field("Current code") }}<button class="btn btn-danger">Turn off 2FA</button></form>
+  {% endif %}</div>
+{% else %}
+  <p><span class="chip chip-off">Off</span> Add a second step so a stolen password isn't enough.</p>
+  <a class="btn btn-primary" href="{{ url_for('auth.setup_2fa') }}">Set up with an authenticator app</a>
+{% endif %}</section>
+
+<section><h2>Change password</h2>
+<form method="post" action="{{ url_for('auth.change_password') }}" class="stack card-form">{{ m.csrf() }}
+  <label class="field"><span>Current password</span><input type="password" name="current" autocomplete="current-password" required></label>
+  <label class="field"><span>New password</span><input type="password" name="password" autocomplete="new-password" minlength="12" required data-strength="#meter"></label>
+  <div id="meter" class="meter"><i></i><span></span></div>
+  <label class="field"><span>Confirm new password</span><input type="password" name="password2" autocomplete="new-password" required></label>
+  <button class="btn btn-primary">Change password</button><small>Your other sessions will be signed out.</small></form></section>
+
+<section><div class="sec-head"><h2>Active sessions</h2>
+{% if sessions|length > 1 %}<form method="post" action="{{ url_for('auth.revoke_others') }}" data-confirm="Sign out everywhere else?">{{ m.csrf() }}<button class="btn btn-small">Sign out all others</button></form>{% endif %}</div>
+<div class="table-wrap"><table><thead><tr><th>Device</th><th>Address</th><th>Signed in</th><th>Last active</th><th></th></tr></thead><tbody>
+{% for s in sessions %}<tr><td>{{ s.label or 'Unknown device' }}{% if s.id == request.cookies.get('sid') or s.id == g.session.id %} <span class="chip chip-ok">This session</span>{% endif %}</td><td><code>{{ s.ip }}</code></td><td>{{ m.when(s.created_at) }}</td><td>{{ m.when(s.last_seen) }}</td>
+<td><form method="post" action="{{ url_for('auth.revoke_session', sid=s.id) }}">{{ m.csrf() }}<button class="btn btn-small btn-danger">Sign out</button></form></td></tr>{% endfor %}</tbody></table></div></section>
+
+<section><h2>Known devices</h2><p class="note">Devices that passed verification. A trusted device skips the 2FA prompt until its trust period ends.</p>
+<div class="table-wrap"><table><thead><tr><th>Device</th><th>First seen</th><th>Last seen</th><th>Trusted until</th><th></th></tr></thead><tbody>
+{% for d in devices %}<tr><td>{{ d.label }}</td><td>{{ m.when(d.first_seen) }}</td><td>{{ m.when(d.last_seen) }}</td><td>{{ m.when(d.trusted_until) if d.trusted_until and d.trusted_until > now() else '—' }}</td>
+<td><form method="post" action="{{ url_for('auth.remove_device', did=d.id) }}" data-confirm="Forget this device?">{{ m.csrf() }}<button class="btn btn-small">Forget</button></form></td></tr>{% endfor %}</tbody></table></div></section>
+</div>
+{% endblock %}

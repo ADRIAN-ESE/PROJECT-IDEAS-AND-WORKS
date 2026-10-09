@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="page narrow">
+<header class="page-head"><h1>Profile</h1></header>
+<dl class="facts"><dt>Username</dt><dd>@{{ current_user.username }}</dd><dt>Role</dt><dd>{{ current_user.role|capitalize }}</dd>
+<dt>Member since</dt><dd>{{ m.when(current_user.created_at) }}</dd><dt>Password changed</dt><dd>{{ m.when(current_user.pw_changed_at) }}</dd>
+<dt>Two-factor</dt><dd>{{ 'On' if current_user.totp_enabled else 'Off' }} · <a href="{{ url_for('auth.security') }}">Manage</a></dd></dl>
+<form method="post" class="stack">{{ m.csrf() }}
+<label class="field"><span>Display name</span><input name="display_name" value="{{ current_user.display_name }}" maxlength="60"></label>
+<label class="field"><span>Email</span><input type="email" name="email" value="{{ current_user.email }}" required></label>
+<label class="field"><span>Current password <em>(only to change your email)</em></span><input type="password" name="password" autocomplete="current-password"></label>
+<button class="btn btn-primary">Save profile</button></form>
+</div>
+{% endblock %}

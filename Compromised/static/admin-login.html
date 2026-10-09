@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhishGuard | Admin Login</title>
+    <link rel="stylesheet" href="/admin.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="login-shell">
+      <div class="login-card">
+        <div class="brand-wrap">
+          <div class="brand-mark">🛡️</div>
+          <div>
+            <strong>PhishGuard</strong>
+            <span>Administrator access</span>
+          </div>
+        </div>
+
+        <h1>Sign in</h1>
+        <p class="subtitle">Review platform health, incident metrics and security coverage.</p>
+
+        <form id="admin-login-form" novalidate>
+          <label>
+            <span>Username</span>
+            <input id="username" type="text" name="username" autocomplete="username" value="admin" required />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input id="password" type="password" name="password" autocomplete="current-password" required />
+          </label>
+
+          <div id="login-error" class="error-message" hidden></div>
+
+          <button type="submit" class="primary-btn">Access console</button>
+        </form>
+
+        <div class="secondary-actions">
+          <a href="/">Back to landing page</a>
+          <a href="/app">Open workspace</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="/admin-login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+{% extends "_auth_shell.html" %}{% block title %}Sign in{% endblock %}
+{% block card %}
+<h2>Sign in</h2>
+{% if error %}<p class="flash flash-error">{{ error }}</p>{% endif %}
+<form method="post" autocomplete="on">{{ m.csrf() }}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  <label class="field"><span>Username or email</span><input name="username" autocomplete="username" required autofocus></label>
+  <label class="field"><span>Password</span><input name="password" type="password" autocomplete="current-password" required></label>
+  <button class="btn btn-primary wide" type="submit">Sign in</button>
+</form>
+<p class="aside"><a href="{{ url_for('auth.forgot') }}">Forgot your password?</a></p>
+<p class="aside">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+{% endblock %}

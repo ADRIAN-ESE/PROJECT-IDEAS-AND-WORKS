@@ -1,0 +1,37 @@
+{% import "_m.html" as m %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>{% block title %}{% endblock %} · SecureShare</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body class="{{ 'app' if current_user else 'plain' }}">
+{% if current_user %}
+<aside class="rail">
+  <a class="brand" href="{{ url_for('files.dashboard') }}"><span class="mark" aria-hidden="true"></span>SecureShare</a>
+  {% set ep = request.endpoint or '' %}
+  <nav aria-label="Main">
+    <a href="{{ url_for('files.dashboard') }}" {% if ep=='files.dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+    <a href="{{ url_for('files.my_files') }}" {% if ep in ('files.my_files','files.detail') %}aria-current="page"{% endif %}>My files</a>
+    <a href="{{ url_for('files.shared') }}" {% if ep=='files.shared' %}aria-current="page"{% endif %}>Shared files</a>
+    <a href="{{ url_for('auth.security') }}" {% if ep.startswith('auth.sec') or ep.endswith('2fa') %}aria-current="page"{% endif %}>Security</a>
+    <a href="{{ url_for('auth.activity') }}" {% if ep=='auth.activity' %}aria-current="page"{% endif %}>Activity log</a>
+    <a href="{{ url_for('auth.profile') }}" {% if ep=='auth.profile' %}aria-current="page"{% endif %}>Profile</a>
+    {% if current_user.role == 'admin' %}<a class="admin-link" href="{{ url_for('admin.index') }}" {% if ep.startswith('admin.') %}aria-current="page"{% endif %}>Admin</a>{% endif %}
+  </nav>
+  <form method="post" action="{{ url_for('auth.logout') }}" class="rail-foot">{{ m.csrf() }}
+    <div class="who"><strong>{{ current_user.display_name }}</strong><small>@{{ current_user.username }}{% if current_user.role=='admin' %} · admin{% endif %}</small></div>
+    <button class="btn btn-quiet" type="submit">Sign out</button>
+  </form>
+</aside>
+{% endif %}
+<main id="main">
+  {% with msgs = get_flashed_messages(with_categories=true) %}{% if msgs %}
+  <div class="flashes" role="status">{% for cat, msg in msgs %}<p class="flash flash-{{ cat }}">{{ msg }}</p>{% endfor %}</div>
+  {% endif %}{% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

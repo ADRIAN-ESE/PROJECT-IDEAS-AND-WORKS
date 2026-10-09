@@ -1,0 +1,47 @@
+{% extends "base.html" %}{% block title %}{{ f.safe_name }}{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><p class="crumb"><a href="{{ url_for('files.my_files' if role=='owner' else 'files.shared') }}">← {{ 'My files' if role=='owner' else 'Shared files' }}</a></p>
+<h1>{{ f.safe_name }}</h1></header>
+{% if new_link %}<div class="callout ok"><div><strong>Share link created.</strong> Copy it now; it won't be shown again.<br><code id="newlink" class="breakable">{{ new_link }}</code></div><button class="btn" data-copy="#newlink">Copy link</button></div>{% endif %}
+<div class="cols">
+<section><h2>Details</h2>
+<dl class="facts">
+<dt>Owner</dt><dd>{{ f.owner_display }} <small>@{{ f.owner_name }}</small></dd>
+<dt>Your access</dt><dd>{{ role|capitalize }}</dd>
+<dt>Size</dt><dd>{{ f.size|size }} ({{ '{:,}'.format(f.size) }} bytes)</dd>
+<dt>Type</dt><dd>{{ f.mime }}</dd>
+<dt>Uploaded</dt><dd>{{ m.when(f.created_at) }}</dd>
+<dt>Malware scan</dt><dd><span class="chip chip-ok">Clean</span> <small>{{ f.scan_engine }}</small></dd>
+<dt>Encryption</dt><dd>AES-256-GCM at rest</dd>
+<dt>SHA-256</dt><dd><code class="breakable">{{ f.sha256 }}</code></dd>
+</dl>
+{% if can_download %}<form method="post" action="{{ url_for('files.download', fid=f.id) }}">{{ m.csrf() }}<button class="btn btn-primary">Download</button> <small>Integrity is verified before every download.</small></form>
+{% else %}<p class="note">Downloading isn't available for your access.</p>{% endif %}
+{% if role == 'owner' %}<form method="post" action="{{ url_for('files.delete', fid=f.id) }}" data-confirm="Delete this file permanently and revoke all its shares?" class="gap">{{ m.csrf() }}<button class="btn btn-danger">Delete file</button></form>{% endif %}
+</section>
+{% if can_reshare %}
+<section><h2>Share</h2>
+<form method="post" action="{{ url_for('files.create_share', fid=f.id) }}" class="stack">{{ m.csrf() }}
+<input type="hidden" name="tz_offset" class="tz-offset" value="0">
+<label class="field"><span>Recipient username{% if public_ok %} <em>(leave blank for a link)</em>{% endif %}</span><input name="recipient" autocomplete="off" {% if not public_ok %}required{% endif %}></label>
+{% if role == 'owner' %}<label class="field"><span>Permission</span><select name="permission"><option value="viewer">Viewer – sees file details</option><option value="collaborator">Collaborator – also sees the access log</option></select></label>{% endif %}
+<label class="field"><span>Expires <em>{{ '(required for links, max ' ~ config.PUBLIC_LINK_MAX_DAYS ~ ' days)' if public_ok else '(optional)' }}</em></span><input type="datetime-local" name="expires_at"></label>
+<label class="field"><span>Maximum downloads <em>(optional)</em></span><input type="number" name="max_downloads" min="1" max="10000"></label>
+<label class="check"><input type="checkbox" name="allow_download" value="1" checked> Allow downloading</label>
+{% if role == 'owner' %}<label class="check"><input type="checkbox" name="allow_reshare" value="1"> Allow the recipient to reshare</label>{% endif %}
+<button class="btn btn-primary" type="submit">Create share</button>
+</form></section>
+{% endif %}
+</div>
+{% if role == 'owner' %}
+<section><h2>Who has access</h2>
+{% if shares %}<div class="table-wrap"><table><thead><tr><th>With</th><th>By</th><th>Access</th><th>Downloads</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>
+{% for s in shares %}<tr><td>{{ s.recipient or 'Link' }}</td><td>{{ s.creator }}</td><td>{{ s.permission|capitalize }}{{ ' · download' if s.allow_download }}{{ ' · reshare' if s.allow_reshare }}</td>
+<td>{{ s.download_count }}{{ ' / ' ~ s.max_downloads if s.max_downloads is not none }}</td><td>{{ m.when(s.expires_at) if s.expires_at else 'Never' }}</td><td>{{ m.share_state(s, t) }}</td>
+<td>{% if not s.revoked %}<form method="post" action="{{ url_for('files.revoke_share', sid=s.id) }}" data-confirm="Revoke this share?">{{ m.csrf() }}<input type="hidden" name="back" value="{{ url_for('files.detail', fid=f.id) }}"><button class="btn btn-small btn-danger">Revoke</button></form>{% endif %}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p class="empty">Only you can see this file.</p>{% endif %}</section>
+{% endif %}
+{% if log %}<section><h2>Access log</h2><ul class="rows">{% for a in log %}<li><span>{{ a.action|replace('_',' ') }} <small>by {{ a.username or 'anonymous' }}</small></span><small>{{ m.when(a.ts) }}</small></li>{% endfor %}</ul></section>{% endif %}
+</div>
+{% endblock %}

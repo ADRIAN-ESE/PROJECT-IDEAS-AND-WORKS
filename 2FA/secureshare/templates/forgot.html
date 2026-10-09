@@ -1,0 +1,11 @@
+{% extends "_auth_shell.html" %}{% block title %}Reset password{% endblock %}
+{% block card %}
+<h2>Reset your password</h2>
+{% if sent %}<p class="flash flash-ok">If that account exists, a reset link is on its way. It works once and expires in 30 minutes.</p>
+{% else %}
+<form method="post">{{ m.csrf() }}
+  <label class="field"><span>Username or email</span><input name="identifier" required autofocus></label>
+  <button class="btn btn-primary wide" type="submit">Send reset link</button>
+</form>{% endif %}
+<p class="aside"><a href="{{ url_for('auth.login') }}">Back to sign in</a></p>
+{% endblock %}

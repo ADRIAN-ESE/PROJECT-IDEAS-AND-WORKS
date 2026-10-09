@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Backup codes{% endblock %}
+{% block content %}
+<div class="page narrow">
+<header class="page-head"><h1>{{ 'Two-factor authentication is on' if first else 'Your new backup codes' }}</h1></header>
+<p class="lead">Save these backup codes somewhere safe. Each works once if you can't use your authenticator app. <strong>They won't be shown again.</strong></p>
+<ol id="codes" class="codes">{% for c in codes %}<li><code>{{ c }}</code></li>{% endfor %}</ol>
+<p class="actions"><button class="btn" data-copy="#codes">Copy all</button> <button class="btn" data-download="#codes" data-filename="secureshare-backup-codes.txt">Download .txt</button> <button class="btn" data-print>Print</button></p>
+<a class="btn btn-primary" href="{{ url_for('auth.security') }}">I've saved them</a>
+</div>
+{% endblock %}

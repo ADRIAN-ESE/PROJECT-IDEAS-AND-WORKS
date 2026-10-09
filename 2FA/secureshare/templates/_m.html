@@ -1,0 +1,14 @@
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
+{% macro when(ts) %}<time datetime="{{ ts|iso }}" data-time>{{ ts|dt }}</time>{% endmacro %}
+{% macro code_field(label="Authentication code", name="code", hint="") %}
+<label class="field"><span>{{ label }}</span>
+<input class="code-input" name="{{ name }}" type="text" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="12" required>
+{% if hint %}<small>{{ hint }}</small>{% endif %}</label>
+{% endmacro %}
+{% macro share_state(s, t) -%}
+{%- if s.revoked %}<span class="chip chip-off">Revoked</span>
+{%- elif s.expires_at and s.expires_at <= t %}<span class="chip chip-off">Expired</span>
+{%- elif s.max_downloads is not none and s.download_count >= s.max_downloads and s.allow_download %}<span class="chip chip-off">Limit reached</span>
+{%- else %}<span class="chip chip-ok">Active</span>{% endif -%}
+{%- endmacro %}
+{% macro sev(s) %}<span class="chip chip-{{ s }}">{{ s }}</span>{% endmacro %}

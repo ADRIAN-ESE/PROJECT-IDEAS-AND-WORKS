@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><h1>Welcome back, {{ current_user.display_name }}</h1>
+<p class="lead">Last sign-in {{ m.when(current_user.last_login_at) if current_user.last_login_at else 'just now' }}.</p></header>
+{% if not current_user.totp_enabled %}
+<div class="callout warn"><div><strong>Two-factor authentication is off.</strong> Anyone who learns your password could open your files.</div>
+<a class="btn btn-primary" href="{{ url_for('auth.setup_2fa') }}">Turn on 2FA</a></div>
+{% endif %}
+{% for a in alerts %}<div class="callout {{ 'bad' if a.severity=='critical' else 'warn' }}"><div><strong>{{ a.kind|replace('_',' ')|capitalize }}.</strong> {{ a.detail }} <small>{{ m.when(a.ts) }}</small></div></div>{% endfor %}
+<section class="stats">
+  <div><b>{{ stats.n }}</b><span>files stored</span></div>
+  <div><b>{{ stats.bytes|size }}</b><span>of {{ quota|size }} used</span><progress value="{{ stats.bytes }}" max="{{ quota }}"></progress></div>
+  <div><b>{{ shared_by_me }}</b><span>active shares from you</span></div>
+  <div><b>{{ shared_with_me }}</b><span>files shared with you</span></div>
+</section>
+<div class="cols">
+<section><div class="sec-head"><h2>Recent uploads</h2><a href="{{ url_for('files.my_files') }}">All files</a></div>
+{% if recent %}<ul class="rows">{% for f in recent %}<li><a href="{{ url_for('files.detail', fid=f.id) }}">{{ f.safe_name }}</a><small>{{ f.size|size }} · {{ m.when(f.created_at) }}</small></li>{% endfor %}</ul>
+{% else %}<p class="empty">Nothing here yet. <a href="{{ url_for('files.my_files') }}">Upload your first file.</a></p>{% endif %}</section>
+<section><div class="sec-head"><h2>Recent activity</h2><a href="{{ url_for('auth.activity') }}">Full log</a></div>
+<ul class="rows">{% for a in activity %}<li><span>{{ a.action|replace('_',' ') }}</span><small>{{ m.when(a.ts) }}</small></li>{% endfor %}</ul></section>
+</div></div>
+{% endblock %}

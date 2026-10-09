@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhishGuard | Admin Console</title>
+    <link rel="stylesheet" href="/admin-console.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">🛡️</div>
+        <div>
+          <strong>PhishGuard</strong>
+          <span>Operations Console</span>
+        </div>
+      </div>
+      <div class="toolbar">
+        <a href="/app" class="nav-link">Open workspace</a>
+        <button id="refresh-btn" class="nav-button" type="button">Refresh data</button>
+        <button id="logout-btn" class="nav-button" type="button">Logout</button>
+      </div>
+    </header>
+
+    <main class="console-wrap">
+      <section class="hero-card">
+        <div>
+          <span class="eyebrow">Security overview</span>
+          <h1>Administration dashboard</h1>
+        </div>
+        <div class="status-pill" id="status-pill" role="status" aria-live="polite">Checking…</div>
+      </section>
+
+      <section class="metric-grid">
+        <article class="metric-card">
+          <span>Total incidents</span>
+          <strong id="total-incidents">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Open alerts</span>
+          <strong id="open-alerts">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Average score</span>
+          <strong id="avg-score">0</strong>
+        </article>
+        <article class="metric-card">
+          <span>Accuracy</span>
+          <strong id="accuracy">—</strong>
+        </article>
+      </section>
+
+      <section class="panel-grid">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Incidents by verdict</h2>
+              <p>Recorded email analysis outcomes</p>
+            </div>
+          </div>
+          <div id="verdict-summary" class="summary-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Alert status</h2>
+              <p>Queue distribution by workflow status</p>
+            </div>
+          </div>
+          <div id="alert-summary" class="summary-list"></div>
+        </article>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Recent alerts</h2>
+            <p>Review alerts and update their workflow status.</p>
+          </div>
+          <span class="panel-meta" id="alerts-count">Loading…</span>
+        </div>
+        <div id="alerts-state" class="inline-state" role="status" aria-live="polite">Loading alerts…</div>
+        <div id="alerts-list" class="alerts-list"></div>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Recent incidents</h2>
+            <p>Latest investigations recorded in PhishGuard.</p>
+          </div>
+          <span class="panel-meta" id="incidents-count">Loading…</span>
+        </div>
+        <div id="incidents-state" class="inline-state" role="status" aria-live="polite">Loading incidents…</div>
+        <div class="table-wrap">
+          <table class="incident-table">
+            <thead>
+              <tr>
+                <th scope="col">Incident</th>
+                <th scope="col">Type</th>
+                <th scope="col">Verdict</th>
+                <th scope="col">Score</th>
+                <th scope="col">Feedback</th>
+                <th scope="col">Created</th>
+              </tr>
+            </thead>
+            <tbody id="incidents-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p class="refresh-note" id="refresh-note">Dashboard data has not been refreshed yet.</p>
+    </main>
+
+    <script src="/admin-console.js"></script>
+  </body>
+</html>

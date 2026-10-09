@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhishGuard | Threat Defense Platform</title>
+    <meta name="description" content="Landing page for the PhishGuard phishing and compromised account analysis platform." />
+    <link rel="stylesheet" href="landing.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <div class="brand">
+          <div class="brand-mark">🛡️</div>
+          <div>
+            <strong>PhishGuard</strong>
+            <span>Threat Defense Platform</span>
+          </div>
+        </div>
+        <nav class="main-links" aria-label="Main navigation">
+          <a href="#features">Features</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#metrics">Coverage</a>
+          <a href="/admin/login">Admin login</a>
+        </nav>
+        <a class="btn btn-primary" href="/app">Launch dashboard</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Phishing detection and account safety</span>
+            <h1>Protect users before phishing, credential theft, and mailbox takeover become incidents.</h1>
+            <p>
+              PhishGuard combines email inspection, activity monitoring, account takeover scoring, and threat intelligence into one analyst-friendly platform.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="/app">Open the workspace</a>
+              <a class="btn btn-secondary" href="/admin/login">Administrator access</a>
+            </div>
+            <ul class="trust-list">
+              <li>Email forensics</li>
+              <li>Compromised account review</li>
+              <li>Threat intel checks</li>
+            </ul>
+          </div>
+
+          <div class="hero-panel">
+            <div class="panel-shell">
+              <div class="topbar">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="signal-box">
+                <div class="signal-row">
+                  <span>Overall risk</span>
+                  <strong>Phishing</strong>
+                </div>
+                <div class="score-ring">
+                  <div class="ring-inner">
+                    <span>93</span>
+                  </div>
+                </div>
+                <div class="labels">
+                  <span>Sender spoof</span>
+                  <span>Brand mismatch</span>
+                  <span>Malicious URL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features container">
+        <div class="section-heading">
+          <span class="eyebrow">Built for analysts</span>
+          <h2>One suite for detection, investigation, and response.</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="icon">📩</div>
+            <h3>Email analysis</h3>
+            <p>Assess senders, headers, URLs, attachments, and message content with explainable findings.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon">🔎</div>
+            <h3>Compromised account checks</h3>
+            <p>Review risky mailbox behaviors, forwarding rules, MFA tampering, and activity anomalies.</p>
+          </article>
+          <article class="feature-card">
+            <div class="icon">🧠</div>
+            <h3>Threat intelligence</h3>
+            <p>Cross-check indicators against bundled feeds, custom watchlists, and enrichment sources.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="workflow container">
+        <div class="section-heading narrow">
+          <span class="eyebrow">Assessment flow</span>
+          <h2>A fast path from suspicious email to incident response.</h2>
+        </div>
+        <div class="workflow-grid">
+          <div class="step">
+            <span>01</span>
+            <h3>Analyze</h3>
+            <p>Paste a message or upload an EML and review the multi-layer risk assessment immediately.</p>
+          </div>
+          <div class="step">
+            <span>02</span>
+            <h3>Investigate</h3>
+            <p>Inspect adversary indicators, your alert history, and incident data from the same workspace.</p>
+          </div>
+          <div class="step">
+            <span>03</span>
+            <h3>Respond</h3>
+            <p>Use the verdict, findings, and watchlists to triage attacks and protect affected users.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="metrics" class="metrics container">
+        <div class="metric-card">
+          <strong>6-stage</strong>
+          <span>analysis pipeline</span>
+        </div>
+        <div class="metric-card">
+          <strong>24/7</strong>
+          <span>signal review</span>
+        </div>
+        <div class="metric-card">
+          <strong>TI + IOC</strong>
+          <span>enrichment support</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-wrap">
+        <span>© 2026 PhishGuard</span>
+        <span>Designed for phishing triage and mailbox compromise investigations.</span>
+      </div>
+    </footer>
+  </body>
+</html>

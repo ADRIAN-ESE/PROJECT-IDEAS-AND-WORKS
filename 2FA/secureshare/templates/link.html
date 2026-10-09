@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Shared file{% endblock %}
+{% block content %}
+<div class="page narrow">
+{% if not s %}<h1>This link isn't available</h1><p class="lead">It may have expired, been revoked, or belong to a different account.</p>
+{% else %}
+<h1>{{ s.safe_name }}</h1>
+<p class="lead">{{ s.sharer }} shared this file with you.</p>
+<dl class="facts"><dt>Size</dt><dd>{{ s.size|size }}</dd><dt>SHA-256</dt><dd><code class="breakable">{{ s.sha256 }}</code></dd>
+<dt>Expires</dt><dd>{{ m.when(s.expires_at) if s.expires_at else 'Never' }}</dd>
+<dt>Downloads left</dt><dd>{{ 'Unlimited' if left is none else left }}</dd></dl>
+{% if s.allow_download and (left is none or left > 0) %}
+<form method="post" action="{{ url_for('files.link_download', token=token) }}">{{ m.csrf() }}<button class="btn btn-primary">Download</button></form>
+{% else %}<p class="note">Downloading isn't available for this link.</p>{% endif %}
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth">
+  <section class="auth-brand">
+    <span class="mark big" aria-hidden="true"></span>
+    <h1>SecureShare</h1>
+    <p>Files are encrypted with AES-256-GCM before they touch the disk, checked against a SHA-256 fingerprint on every download, and shared only with the people and rules you choose.</p>
+  </section>
+  <section class="auth-card">{% block card %}{% endblock %}</section>
+</div>
+{% endblock %}

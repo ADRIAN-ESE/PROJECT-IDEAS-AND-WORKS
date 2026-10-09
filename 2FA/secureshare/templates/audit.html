@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Audit log{% endblock %}
+{% block content %}
+<div class="page">
+<header class="page-head"><p class="crumb"><a href="{{ url_for('admin.index') }}">← Administration</a></p><h1>Audit log</h1>
+<p class="lead">Entries are chained with an HMAC, so edits or deletions are detectable.</p></header>
+<form method="get" class="filters"><input name="user" value="{{ uname }}" placeholder="Username"><input name="action" value="{{ action }}" placeholder="Event starts with…">
+<select name="severity"><option value="">Any severity</option>{% for s in ('info','warning','critical') %}<option {{ 'selected' if sev==s }}>{{ s }}</option>{% endfor %}</select><button class="btn">Filter</button></form>
+<form method="post" action="{{ url_for('admin.verify_chain') }}" class="gap">{{ m.csrf() }}<button class="btn btn-small">Verify log integrity</button></form>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>When</th><th>User</th><th>Event</th><th>Details</th><th>Address</th><th></th></tr></thead><tbody>
+{% for a in rows %}<tr><td>{{ a.id }}</td><td>{{ m.when(a.ts) }}</td><td>{{ a.username or '—' }}</td><td>{{ a.action|replace('_',' ') }}</td><td>{{ a.detail }}</td><td><code>{{ a.ip }}</code></td><td>{{ m.sev(a.severity) }}</td></tr>{% endfor %}</tbody></table></div>
+<p class="pager">{% if page > 1 %}<a href="?page={{ page-1 }}&user={{ uname }}&action={{ action }}&severity={{ sev }}">← Newer</a>{% endif %} {% if more %}<a href="?page={{ page+1 }}&user={{ uname }}&action={{ action }}&severity={{ sev }}">Older →</a>{% endif %}</p>
+</div>
+{% endblock %}

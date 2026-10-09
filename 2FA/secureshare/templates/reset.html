@@ -1,0 +1,17 @@
+{% extends "_auth_shell.html" %}{% block title %}Choose a new password{% endblock %}
+{% block card %}
+{% if invalid %}
+<h2>This link no longer works</h2><p>Reset links work once and expire after 30 minutes.</p>
+<a class="btn btn-primary" href="{{ url_for('auth.forgot') }}">Request a new link</a>
+{% else %}
+<h2>Choose a new password</h2>
+{% if error %}<p class="flash flash-error">{{ error }}</p>{% endif %}
+<form method="post">{{ m.csrf() }}
+  <label class="field"><span>New password</span><input name="password" type="password" autocomplete="new-password" minlength="12" required data-strength="#meter"></label>
+  <div id="meter" class="meter"><i></i><span></span></div>
+  <label class="field"><span>Confirm new password</span><input name="password2" type="password" autocomplete="new-password" required></label>
+  <button class="btn btn-primary wide" type="submit">Update password</button>
+</form>
+<p class="aside">Every signed-in session will be ended. Two-factor codes still apply at your next sign-in.</p>
+{% endif %}
+{% endblock %}
