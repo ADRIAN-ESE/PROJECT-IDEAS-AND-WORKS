@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Minimal Cyber Awareness — Learn to recognize phishing, create strong passwords, and stay safe online." />
+  <title>CyberAware — Minimal Cyber Awareness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="app-loader" id="appLoader" role="status" aria-live="polite">
+    <div class="loader-mark">🛡️</div>
+    <p>Securing your training space</p>
+    <span class="loader-track"><span></span></span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="navigate('home')">
+      <span class="brand-icon">🛡️</span>
+      <span class="brand-text">CyberAware</span>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" data-section="home" class="nav-link active">Home</a></li>
+      <li><a href="#learn" data-section="learn" class="nav-link">Learn</a></li>
+      <li><a href="#quiz" data-section="quiz" class="nav-link">Quiz</a></li>
+      <li><a href="#phishing" data-section="phishing" class="nav-link">Spot the Phish</a></li>
+      <li><a href="#password" data-section="password" class="nav-link">Password Check</a></li>
+      <li><a href="#dashboard" data-section="dashboard" class="nav-link">Dashboard</a></li>
+      <li id="adminNavItem" class="hidden"><a href="#admin" data-section="admin" class="nav-link">Admin</a></li>
+    </ul>
+    <div class="auth-controls">
+      <span id="userGreeting" class="user-greeting hidden"></span>
+      <button class="btn btn-ghost auth-button" id="authOpenBtn" type="button">Sign in</button>
+      <button class="btn btn-ghost auth-button hidden" id="logoutBtn" type="button">Sign out</button>
+    </div>
+  </nav>
+
+  <main id="app">
+    <!-- ==================== HOME ==================== -->
+    <section id="home" class="section active">
+      <div class="hero hero-landing">
+        <div class="hero-content">
+          <div class="hero-kicker"><span class="status-dot"></span> Built for safer everyday decisions</div>
+          <h1 class="hero-title">Train your instincts.<span class="gradient-text"> Defend your digital life.</span></h1>
+          <p class="hero-subtitle">
+            CyberAware helps teams, students, and everyday users build practical security habits through focused training,
+            realistic phishing challenges, and smart password guidance.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="if (typeof Auth !== 'undefined' && !Auth.user) { Auth.open('login', 'Sign in to unlock quizzes and phishing simulations.'); } else { navigate('quiz'); }">Start Training</button>
+            <button class="btn btn-secondary" onclick="navigate('learn')">Explore Topics</button>
+            <button class="btn btn-ghost" onclick="navigate('phishing')">Spot the Phish</button>
+          </div>
+          <div class="hero-trust">
+            <span>{{ topic_count }} core topics</span>
+            <span>{{ question_count }} quiz questions</span>
+            <span>Real-world simulations</span>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Security overview panel">
+          <div class="panel-top">
+            <span>Threat Awareness Pulse</span>
+            <span class="status-pill">Protected</span>
+          </div>
+          <div class="panel-score">
+            <strong>94%</strong>
+            <small>Preparedness score</small>
+          </div>
+          <ul class="mini-feed">
+            <li><span class="feed-dot green"></span> Phishing defenses up</li>
+            <li><span class="feed-dot amber"></span> Password hygiene review</li>
+            <li><span class="feed-dot purple"></span> Device posture improved</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="statTopics">{{ topic_count }}</span>
+          <span class="stat-label">Topics</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="statQuestions">{{ question_count }}</span>
+          <span class="stat-label">Questions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="statPhishing">6</span>
+          <span class="stat-label">Phish Sims</span>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" onclick="if (typeof Auth !== 'undefined' && !Auth.user) { Auth.open('login', 'Sign in to unlock the quiz experience.'); } else { navigate('quiz'); }">
+          <div class="feature-icon">🎯</div>
+          <h3>Interactive Quizzes</h3>
+          <p>Test your knowledge across phishing, passwords, social engineering, and more with instant feedback.</p>
+        </div>
+        <div class="feature-card" onclick="navigate('learn')">
+          <div class="feature-icon">📚</div>
+          <h3>Educational Content</h3>
+          <p>Clear, practical lessons and best practices for every major cybersecurity topic.</p>
+        </div>
+        <div class="feature-card" onclick="if (typeof Auth !== 'undefined' && !Auth.user) { Auth.open('login', 'Please sign in to begin phishing practice.'); } else { navigate('phishing'); }">
+          <div class="feature-icon">🎣</div>
+          <h3>Phishing Simulator</h3>
+          <p>Train your eye by spotting red flags in realistic phishing email mockups.</p>
+        </div>
+        <div class="feature-card" onclick="navigate('password')">
+          <div class="feature-icon">🔐</div>
+          <h3>Password Checker</h3>
+          <p>Real-time strength analysis with entropy, crack-time estimates, and improvement tips.</p>
+        </div>
+        <div class="feature-card" onclick="if (typeof Auth !== 'undefined' && !Auth.user) { Auth.open('login', 'Sign in to view your saved progress dashboard.'); } else { navigate('dashboard'); }">
+          <div class="feature-icon">📊</div>
+          <h3>Progress Dashboard</h3>
+          <p>Track your scores, streaks, and awareness level with a personal security profile.</p>
+        </div>
+        <a class="feature-card" href="#learn">
+          <div class="feature-icon">🧭</div>
+          <h3>Practical Guidance</h3>
+          <p>Build useful habits through clear explanations, realistic scenarios, and measurable progress.</p>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==================== LEARN ==================== -->
+    <section id="learn" class="section">
+      <div class="section-header">
+        <h2>Educational Content</h2>
+        <p>Browse cybersecurity topics and level up your awareness.</p>
+      </div>
+      <div class="topics-grid" id="topicsGrid">
+        <!-- Populated by JS -->
+      </div>
+      <div id="lessonDetail" class="lesson-detail hidden">
+        <!-- Expanded lesson content -->
+      </div>
+    </section>
+
+    <!-- ==================== QUIZ ==================== -->
+    <section id="quiz" class="section">
+      <div class="section-header">
+        <h2>Cybersecurity Quiz</h2>
+        <p>Choose a topic, select a difficulty, and build confidence one decision at a time.</p>
+      </div>
+      <div id="quizSetup" class="quiz-setup">
+        <div class="quiz-intro">
+          <span class="eyebrow">{{ question_count }}-question learning bank · at least 15 per topic and difficulty</span>
+          <h3>Where would you like to strengthen your awareness?</h3>
+          <p>Each quiz includes instant explanations so every answer becomes a learning moment.</p>
+          <div class="comprehensive-exam-callout">
+            <div>
+              <strong>Ready for the all-topics exam?</strong>
+              <p>Complete a quiz in every topic first. Then take 55 questions · 5 from each topic · 60 minutes · 70% to pass.</p>
+            </div>
+            <button class="btn btn-primary" id="comprehensiveExamBtn" type="button">Start Comprehensive Exam</button>
+          </div>
+        </div>
+        <div class="quiz-topics" id="quizTopics">
+          <!-- Topic selection cards -->
+        </div>
+        <div class="quiz-options">
+          <label>
+            Difficulty
+            <select id="quizDifficulty">
+              <option value="">All Levels</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </label>
+          <p class="quiz-time-limit" id="quizTimeLimitHint">Time limits: Beginner 10 min · Intermediate 15 min · Advanced 20 min. All Levels uses a weighted limit.</p>
+        </div>
+      </div>
+      <div id="quizPlay" class="quiz-play hidden">
+        <div class="quiz-progress">
+          <div class="progress-bar"><div class="progress-fill" id="quizProgressFill"></div></div>
+          <span id="quizProgressText">1 / 10</span>
+          <span id="quizTimer" class="quiz-timer" role="timer" aria-live="off" aria-label="Quiz timer">--:--</span>
+        </div>
+        <div class="quiz-question-card" id="quizQuestionCard">
+          <!-- Question rendered here -->
+        </div>
+        <div class="quiz-feedback hidden" id="quizFeedback"></div>
+        <div class="quiz-actions">
+          <button class="btn btn-secondary" id="quizBackBtn" type="button" disabled>Back</button>
+          <button class="btn btn-primary" id="quizNextBtn" type="button" disabled>Next question</button>
+          <button class="btn btn-ghost" id="quizQuitBtn">Quit</button>
+        </div>
+      </div>
+      <div id="quizResults" class="quiz-results hidden">
+        <!-- Results summary -->
+      </div>
+    </section>
+
+    <!-- ==================== PHISHING ==================== -->
+    <section id="phishing" class="section">
+      <div class="section-header">
+        <h2>Spot the Phish</h2>
+        <p>Examine realistic emails and click on suspicious elements. How many red flags can you find?</p>
+      </div>
+      <div id="phishingList" class="phishing-list">
+        <!-- Example cards -->
+      </div>
+      <div id="phishingSim" class="phishing-sim hidden">
+        <div class="email-client">
+          <div class="email-toolbar">
+            <span class="email-toolbar-btn">← Back</span>
+            <span class="email-toolbar-title">Inbox</span>
+          </div>
+          <div class="email-meta" id="emailMeta">
+            <!-- From, Subject, Date -->
+          </div>
+          <div class="email-body" id="emailBody">
+            <!-- Email content with clickable red-flag zones -->
+          </div>
+        </div>
+        <div class="phishing-sidebar">
+          <h3>Red Flags Found</h3>
+          <ul id="foundFlags"></ul>
+          <p class="flag-count"><span id="flagCount">0</span> / <span id="flagTotal">0</span></p>
+          <button class="btn btn-primary" id="revealFlagsBtn">Reveal All Flags</button>
+          <button class="btn btn-secondary" id="nextPhishBtn">Next Example</button>
+          <div id="phishExplanation" class="phish-explanation hidden"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== PASSWORD ==================== -->
+    <section id="password" class="section">
+      <div class="section-header">
+        <h2>Password Strength Checker</h2>
+        <p>Type a password to see real-time analysis. Nothing is stored or sent beyond this session.</p>
+      </div>
+      <div class="password-checker">
+        <div class="password-input-wrap">
+          <input type="password" id="passwordInput" placeholder="Enter a password to analyze…" autocomplete="off" />
+          <button class="btn-icon" id="togglePassword" aria-label="Show password">👁️</button>
+        </div>
+        <div class="strength-meter">
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel">Start typing…</div>
+        <div class="password-stats" id="passwordStats">
+          <!-- Entropy, crack time, checklist -->
+        </div>
+        <div class="password-tips" id="passwordTips">
+          <h4>Best Practices</h4>
+          <ul>
+            <li>Use at least 12–16 characters</li>
+            <li>Mix uppercase, lowercase, numbers, and symbols</li>
+            <li>Avoid common words, names, and sequences</li>
+            <li>Never reuse passwords across sites</li>
+            <li>Use a reputable password manager</li>
+            <li>Enable multi-factor authentication (MFA) everywhere possible</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DASHBOARD ==================== -->
+    <section id="dashboard" class="section">
+      <div class="section-header">
+        <h2>Your Progress</h2>
+        <p>Track your cybersecurity awareness journey. Data stays in your browser.</p>
+      </div>
+      <div class="verification-banner hidden" id="accountAccessBanner">
+        <div>
+          <strong id="accountAccessTitle"></strong>
+          <p id="accountAccessMessage"></p>
+        </div>
+        <button class="btn btn-primary hidden" id="accountAccessAction" type="button"></button>
+      </div>
+
+      <!-- Quick Action Toolbar -->
+      <div class="dash-quick-actions">
+        <button class="btn btn-primary btn-sm" id="openCertBtn" type="button">🏆 View Certificate</button>
+        <button class="btn btn-secondary btn-sm" id="openReportBtn" type="button">📊 Export Training Report</button>
+        <button class="btn btn-secondary btn-sm" id="open2faBtn" type="button">🛡️ 2FA Security Settings</button>
+        <button class="btn btn-secondary btn-sm" id="exportCsvBtn" type="button">⬇️ Progress (CSV)</button>
+        <button class="btn btn-ghost btn-sm" id="openAccountSettingsBtn" type="button">⚙️ Account</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dash-card awareness-card">
+          <div class="card-header-flex">
+            <h3>Awareness Level</h3>
+            <span class="security-badge-icon">🛡️</span>
+          </div>
+          <div class="awareness-badge" id="awarenessBadge">Novice</div>
+          <div class="awareness-score" id="awarenessScore">0%</div>
+          <div class="progress-bar large"><div class="progress-fill" id="awarenessBar"></div></div>
+          <p class="awareness-tip" id="awarenessTip">Complete quizzes and phishing simulations to increase your defensive readiness.</p>
+        </div>
+
+        <div class="dash-card wide radar-card">
+          <div class="card-header-flex">
+            <div>
+              <h3>{{ topic_count }}-Domain Defense Radar</h3>
+              <small class="card-subtext">Recent scores across each security discipline · hover a spoke for detail</small>
+            </div>
+            <span class="radar-summary" id="radarSummary">No domains assessed</span>
+          </div>
+          <canvas id="radarChart" width="640" height="440" role="img" aria-label="Radar chart showing recent assessment scores by security domain"></canvas>
+          <p class="radar-tooltip" id="radarTooltip" aria-live="polite">Complete a quiz to see your domain scores.</p>
+          <div class="radar-legend" id="radarLegend" aria-label="Radar chart domain scores"></div>
+        </div>
+
+        <div class="dash-card">
+          <div class="card-header-flex">
+            <h3>Training Statistics</h3>
+            <span class="stat-glyph">📈</span>
+          </div>
+          <div class="stats-list" id="dashStats">
+            <div class="stat-row"><span>Quizzes Taken</span><span id="statQuizzes" class="stat-num">0</span></div>
+            <div class="stat-row"><span>Avg. Quiz Score</span><span id="statAvgScore" class="stat-num">—</span></div>
+            <div class="stat-row"><span>Phish Sims Completed</span><span id="statPhishDone" class="stat-num">0</span></div>
+            <div class="stat-row"><span>Current Streak</span><span id="statStreak" class="stat-num">0 days</span></div>
+            <div class="stat-row"><span>2FA Security</span><span id="stat2FA" class="status-pill status-disabled">Disabled</span></div>
+          </div>
+        </div>
+
+        <!-- Topic Mastery Breakdown -->
+        <div class="dash-card wide">
+          <div class="card-header-flex">
+            <div>
+              <h3>Topic Mastery Breakdown</h3>
+              <small class="card-subtext">Recent results, attempt history, and proficiency by domain</small>
+            </div>
+            <span class="mastery-coverage" id="masteryCoverage">0 of 10 assessed</span>
+          </div>
+          <div class="topic-mastery-grid" id="topicMasteryList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="dash-card wide">
+          <div class="card-header-flex">
+            <h3>Quiz History</h3>
+            <small class="card-subtext">Recent assessment outcomes</small>
+          </div>
+          <div class="history-list" id="quizHistory">
+            <p class="empty-state">No quizzes taken yet. Go take one!</p>
+          </div>
+        </div>
+
+        <div class="dash-card wide">
+          <div class="card-header-flex">
+            <h3>Global Leaderboard</h3>
+            <span class="leaderboard-icon">🏆</span>
+          </div>
+          <div class="leaderboard-list" id="leaderboardList"></div>
+        </div>
+
+        <div class="dash-card wide">
+          <div class="card-header-flex">
+            <h3>Daily Defensive Challenges</h3>
+            <span class="challenge-icon">🎯</span>
+          </div>
+          <div class="challenge-list" id="challengeList"></div>
+        </div>
+
+        <div class="dash-card wide">
+          <div class="card-header-flex">
+            <h3>Earned Achievements & Badges</h3>
+            <span class="achieve-count" id="achieveCount">0 / 16</span>
+          </div>
+          <div class="achievements" id="achievements">
+            <!-- Badges -->
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-actions">
+        <div class="progress-reset-card">
+          <div class="progress-reset-copy">
+            <span class="progress-reset-eyebrow">Progress controls</span>
+            <h3>Reset training progress</h3>
+            <p>Quiz results, phishing practice, and your learning streak will be cleared.</p>
+          </div>
+          <div class="progress-reset-action">
+            <button class="btn btn-threat progress-reset-button" id="resetProgressBtn" type="button">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+                <path d="M4 11a8 8 0 1 1 2.34 5.66M4 4v7h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Request a reset</span>
+            </button>
+            <p class="reset-progress-status" id="resetProgressStatus" role="status">
+              Your request must be approved by an administrator.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ADMIN ==================== -->
+    <section id="admin" class="section">
+      <div class="section-header">
+        <span class="eyebrow">Administrator view</span>
+        <h2>Platform Overview</h2>
+        <p>Monitor participation without exposing user passwords or private credentials.</p>
+      </div>
+      <div class="admin-stats" id="adminStats"></div>
+      <div class="dash-card wide">
+        <h3>Progress reset requests</h3>
+        <p class="reset-requests-description">Approve to permanently clear the learner's quiz, phishing, and streak history, or reject the request.</p>
+        <div class="admin-reset-requests" id="adminResetRequests" aria-live="polite"></div>
+      </div>
+      <div class="dash-card wide">
+        <div class="admin-users-header">
+          <div>
+            <h3>Registered users</h3>
+            <p>Review accounts, approve pending learners, or remove accounts and their training history.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="adminExportCsvBtn" type="button">Export users (CSV)</button>
+        </div>
+        <div class="admin-user-toolbar">
+          <label class="admin-select-all">
+            <input id="adminSelectAllUsers" type="checkbox" aria-label="Select all eligible users">
+            <span>Select all eligible users</span>
+          </label>
+          <span class="admin-selection-count" id="adminSelectionCount" aria-live="polite">No users selected</span>
+          <button class="btn btn-threat btn-sm admin-bulk-delete" id="adminRemoveSelectedUsers" type="button" disabled>
+            Delete selected users
+          </button>
+        </div>
+        <div class="admin-user-columns" aria-hidden="true">
+          <span>User</span>
+          <span>Account status</span>
+          <span>Joined</span>
+          <span>Actions</span>
+        </div>
+        <div class="admin-users" id="adminUsers" aria-live="polite"></div>
+      </div>
+      <div class="dash-card wide">
+        <h3>Top Performers</h3>
+        <div class="admin-rankings" id="adminLeaderboard"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== AUTH MODAL ==================== -->
+  <div class="auth-modal hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="auth-card">
+      <button class="modal-close" id="authCloseBtn" type="button" aria-label="Close sign in dialog">×</button>
+      <span class="eyebrow">CyberAware account</span>
+      <h2 id="authTitle">Welcome back</h2>
+      <p id="authSubtitle">Sign in to save quizzes, streaks, and phishing practice to your account.</p>
+
+      <form id="loginForm" class="auth-form">
+        <label>Username or email<input id="loginIdentifier" required autocomplete="username" /></label>
+        <label>Password<input id="loginPassword" type="password" required autocomplete="current-password" /></label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <button class="auth-switch" id="showRegisterBtn" type="button">Create a new account</button>
+      </form>
+
+      <!-- 2FA Prompt during login -->
+      <form id="login2faForm" class="auth-form hidden">
+        <div class="auth-2fa-icon">🔐</div>
+        <p class="auth-2fa-desc">Enter the 6-digit verification code from your authenticator app or an 8-character backup code.</p>
+        <label>Authenticator Code or Backup Code
+          <input id="login2faCode" placeholder="123456 or backup code" autocomplete="one-time-code" required />
+        </label>
+        <button class="btn btn-primary" type="submit">Verify & Sign in</button>
+        <button class="auth-switch" id="backToLoginBtn" type="button">← Back to standard login</button>
+      </form>
+
+      <form id="registerForm" class="auth-form hidden">
+        <label>Username<input id="registerUsername" required minlength="3" autocomplete="username" /></label>
+        <label>Email<input id="registerEmail" type="email" required autocomplete="email" /></label>
+        <label>Password<input id="registerPassword" type="password" required minlength="10" autocomplete="new-password" /></label>
+        <div class="pw-hint" id="registerPwHint">Use 10+ characters with uppercase, lowercase, number, and symbol.</div>
+        <div class="pw-feedback hidden" id="registerPwFeedback"></div>
+        <button class="btn btn-primary" type="submit">Create account</button>
+        <button class="auth-switch" id="showLoginBtn" type="button">I already have an account</button>
+      </form>
+
+      <div id="pwResetRequestForm" class="auth-form hidden">
+        <p class="auth-2fa-desc">Enter the email address associated with your account and we'll send you a 6-digit reset code.</p>
+        <label>Email<input id="pwResetEmail" type="email" required autocomplete="email" /></label>
+        <button class="btn btn-primary" id="pwResetRequestBtn" type="button">Send Reset Code</button>
+        <button class="auth-switch" id="pwResetBackLogin" type="button">← Back to sign in</button>
+      </div>
+
+      <div id="pwResetConfirmForm" class="auth-form hidden">
+        <p class="auth-2fa-desc">Enter the 6-digit code from the email and choose a new strong password.</p>
+        <label>Email<input id="pwResetConfirmEmail" type="email" required autocomplete="email" /></label>
+        <label>Reset Code<input id="pwResetConfirmCode" maxlength="6" placeholder="123456" autocomplete="one-time-code" /></label>
+        <label>New Password<input id="pwResetNewPassword" type="password" required minlength="10" autocomplete="new-password" /></label>
+        <div class="pw-hint">Use 10+ characters with uppercase, lowercase, number, and symbol.</div>
+        <button class="btn btn-primary" id="pwResetConfirmBtn" type="button">Reset Password</button>
+        <button class="auth-switch" id="pwResetBackRequest" type="button">← Send new code</button>
+      </div>
+
+      <div id="loginForgotRow" class="login-forgot-row hidden">
+        <button class="link-btn" id="showPwResetBtn" type="button">Forgot password?</button>
+      </div>
+
+      <p class="auth-message" id="authMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- ==================== 2FA SETTINGS MODAL ==================== -->
+  <div class="auth-modal hidden" id="twoFactorModal" role="dialog" aria-modal="true" aria-labelledby="twoFactorTitle">
+    <div class="auth-card modal-card-wide">
+      <button class="modal-close" id="twoFactorCloseBtn" type="button" aria-label="Close 2FA settings">×</button>
+      <span class="eyebrow">Account Security</span>
+      <h2 id="twoFactorTitle">Two-Factor Authentication (2FA)</h2>
+      <p id="twoFactorSubtitle">Protect your account with standard TOTP apps (Google Authenticator, Microsoft Authenticator, 1Password, Authy).</p>
+
+      <div id="twoFactorSetupView">
+        <div class="twofa-status-banner" id="twofaCurrentStatus">
+          <span class="status-pill status-disabled" id="twofaStatusPill">2FA Disabled</span>
+          <p id="twofaStatusText">Enabling 2FA adds an extra layer of defense against unauthorized logins.</p>
+        </div>
+
+        <div id="twoFactorActiveSection" class="hidden">
+          <p class="info-alert">✅ Two-factor authentication is active on your account.</p>
+          <div class="auth-form" style="margin-top: 1rem;">
+            <label>Confirm Password to Disable 2FA
+              <input id="disable2faPassword" type="password" placeholder="Enter your current password" />
+            </label>
+            <button class="btn btn-threat" id="disable2faBtn" type="button">Disable Two-Factor Authentication</button>
+          </div>
+        </div>
+
+        <div id="twoFactorSetupSection" class="hidden">
+          <div class="twofa-qr-card">
+            <div class="qr-canvas-wrap">
+              <canvas id="twoFactorQrCanvas" width="180" height="180"></canvas>
+            </div>
+            <div class="twofa-key-block">
+              <label>Manual Secret Key</label>
+              <div class="copy-input-group">
+                <input id="twoFactorSecretText" readonly />
+                <button class="btn btn-ghost btn-sm" id="copySecretBtn" type="button">Copy</button>
+              </div>
+              <small>Scan the QR code in your authenticator or paste the secret key.</small>
+            </div>
+          </div>
+
+          <form id="twoFactorEnableForm" class="auth-form" style="margin-top: 1.25rem;">
+            <label>Enter 6-digit Code from Authenticator
+              <input id="twoFactorVerifyCode" maxlength="6" placeholder="000000" required autocomplete="one-time-code" />
+            </label>
+            <button class="btn btn-primary" type="submit">Verify & Enable 2FA</button>
+          </form>
+        </div>
+
+        <div id="twoFactorBackupCodesSection" class="hidden">
+          <div class="backup-codes-card">
+            <h3>⚠️ Save Your Emergency Backup Codes</h3>
+            <p>If you lose access to your authenticator app, these one-time codes are the only way to recover access. Each code can be used once.</p>
+            <div class="backup-codes-grid" id="backupCodesList"></div>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap">
+              <button class="btn btn-secondary btn-sm" id="copyBackupCodesBtn" type="button">Copy Backup Codes</button>
+              <button class="btn btn-primary btn-sm" id="finish2faSetupBtn" type="button">Done</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="twoFactorActionRow" style="margin-top: 1.5rem; text-align: right;">
+          <button class="btn btn-primary" id="start2faSetupBtn" type="button">Set Up 2FA Now</button>
+        </div>
+      </div>
+      <p class="auth-message" id="twoFactorMessage" role="status"></p>
+    </div>
+  </div>
+
+  <!-- ==================== CERTIFICATE MODAL ==================== -->
+  <div class="auth-modal hidden" id="certModal" role="dialog" aria-modal="true" aria-labelledby="certModalTitle">
+    <div class="auth-card cert-card-modal">
+      <button class="modal-close" id="certCloseBtn" type="button" aria-label="Close certificate dialog">×</button>
+      <div class="cert-modal-header">
+        <span class="eyebrow">Verified Credential</span>
+        <h2 id="certModalTitle">Certificate of Cybersecurity Awareness</h2>
+        <p>Proficiency level is based on your verified result in the all-topics comprehensive exam.</p>
+      </div>
+
+      <!-- Certificate Preview Container -->
+      <div class="certificate-container" id="certificateFrame">
+        <div class="cert-border-outer">
+          <div class="cert-border-inner">
+            <div class="cert-watermark">🛡️</div>
+            <div class="cert-header">
+              <div class="cert-badge-emblem">🛡️ CYBERAWARE</div>
+              <span class="cert-tagline">Official Training & Competency Verification</span>
+            </div>
+            <div class="cert-body">
+              <p class="cert-preamble">This is to certify that</p>
+              <h1 class="cert-recipient" id="certRecipientName">Security Practitioner</h1>
+              <p class="cert-statement">has passed the all-topics cybersecurity exam and demonstrated verified proficiency.</p>
+              <div class="cert-meta-grid">
+                <div class="cert-meta-col">
+                  <span class="meta-label">Exam Score</span>
+                  <strong class="meta-value" id="certScoreVal">95%</strong>
+                </div>
+                <div class="cert-meta-col">
+                  <span class="meta-label">Conferred Level</span>
+                  <strong class="meta-value" id="certLevelVal">Master Cyber Guardian</strong>
+                </div>
+                <div class="cert-meta-col">
+                  <span class="meta-label">Issue Date</span>
+                  <strong class="meta-value" id="certDateVal">2026-10-02</strong>
+                </div>
+                <div class="cert-meta-col">
+                  <span class="meta-label">Credential ID</span>
+                  <strong class="meta-value" id="certIdVal">CYBER-8FA92C4E</strong>
+                </div>
+              </div>
+            </div>
+            <div class="cert-footer">
+              <div class="cert-sig">
+                <div class="sig-line">CyberAware Verification Authority</div>
+                <span class="sig-title">Automated Cryptographic Validation</span>
+              </div>
+              <div class="cert-seal">
+                <div class="seal-ring">VERIFIED DEFENDER</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cert-modal-actions">
+        <button class="btn btn-primary" id="downloadCertBtn" type="button">📥 Download Certificate (PNG)</button>
+        <button class="btn btn-secondary" id="printCertBtn" type="button">🖨️ Print Certificate</button>
+        <button class="btn btn-ghost" id="copyCertLinkBtn" type="button">🔗 Copy Credential ID</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PROGRESS REPORT MODAL ==================== -->
+  <div class="auth-modal hidden" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+    <div class="auth-card modal-card-wide">
+      <button class="modal-close" id="reportCloseBtn" type="button" aria-label="Close report dialog">×</button>
+      <span class="eyebrow">Audit & Compliance</span>
+      <h2 id="reportModalTitle">Cybersecurity Training & Competency Report</h2>
+      <p>Comprehensive breakdown of user training history, defensive skill proficiencies, and metrics.</p>
+
+      <div class="report-content" id="reportContentArea">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="cert-modal-actions" style="margin-top: 1.5rem;">
+        <button class="btn btn-primary" id="printReportBtn" type="button">🖨️ Print / Save as PDF</button>
+        <button class="btn btn-secondary" id="downloadReportJsonBtn" type="button">📄 Export JSON</button>
+        <button class="btn btn-ghost" id="copyReportSummaryBtn" type="button">📋 Copy Summary</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ACCOUNT SETTINGS MODAL ==================== -->
+  <div class="auth-modal hidden" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountTitle">
+    <div class="auth-card modal-card-wide">
+      <button class="modal-close" id="accountCloseBtn" type="button" aria-label="Close account settings">×</button>
+      <span class="eyebrow">Account Management</span>
+      <h2 id="accountTitle">Account Settings</h2>
+      <p>Update your password or permanently remove your account and all of its data.</p>
+
+      <div class="auth-form" style="margin-top:1rem;">
+        <h3>Change Password</h3>
+        <label>Current Password
+          <input id="chgPwCurrent" type="password" autocomplete="current-password" />
+        </label>
+        <label>New Password
+          <input id="chgPwNew" type="password" autocomplete="new-password" minlength="10" />
+        </label>
+        <label>2FA Code (if enabled)
+          <input id="chgPw2fa" maxlength="6" placeholder="Required only if 2FA is on" autocomplete="one-time-code" />
+        </label>
+        <button class="btn btn-primary btn-sm" id="submitChangePw" type="button">Update Password</button>
+        <p class="auth-message" id="chgPwMessage" role="status"></p>
+      </div>
+
+      <hr style="margin:1.5rem 0;border:none;border-top:1px solid #1f2d2c;" />
+
+      <div class="auth-form">
+        <h3 style="color:#ff8880;">Delete Account</h3>
+        <p class="danger-text">This permanently removes your account, progress, quizzes, and phishing history. This action cannot be undone.</p>
+        <label>Confirm Current Password
+          <input id="deleteAccountPassword" type="password" autocomplete="current-password" />
+        </label>
+        <button class="btn btn-threat btn-sm" id="submitDeleteAccount" type="button">Permanently Delete My Account</button>
+        <p class="auth-message" id="deleteAccountMessage" role="status"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <footer class="footer">
+    <p>CyberAware — Minimal Cyber Awareness App · Educational use only · No real phishing or attacks</p>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/quiz.js"></script>
+  <script src="/static/js/phishing.js"></script>
+  <script src="/static/js/password.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>
